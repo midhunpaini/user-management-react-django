@@ -3,11 +3,14 @@ import Home from '../components/home/Home'
 import Navbar from '../components/navbar/Navbar'
 
 
+
+
 const UserHome = () => {
+  
   return (
     <>
     <Navbar page='home'/>
-    <Home />
+    <Home/>
     </>
   )
 }

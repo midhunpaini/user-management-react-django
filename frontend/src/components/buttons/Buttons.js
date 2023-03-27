@@ -4,7 +4,7 @@ import { logoutUser } from "../../features/User";
 import { Navigate } from "react-router-dom";
 
 
-export const LogoutButton = () => {
+export const LogoutButton = (props) => {
   
   const dispatch = useDispatch();
   const logout = async () => {
@@ -15,6 +15,8 @@ export const LogoutButton = () => {
     });
 
     dispatch(logoutUser());
+    localStorage.setItem("user", JSON.stringify({isLogged:false}));
+    props.setUser(JSON.parse(localStorage.getItem("user")) || {});
     <Navigate to={"/home"} />
   };
   return (

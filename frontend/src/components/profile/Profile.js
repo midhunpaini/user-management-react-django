@@ -1,13 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
-
+import { useDispatch } from 'react-redux';
+import { login } from '../../features/User';
 const Profile = () => {
   const user = useSelector(state => state.user.value);
-  console.log(user)
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const getUser = async () => {
+        if(!user.isLogged){
+          const data = await fetch("http://localhost:8000/api/user", {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const json = await data.json();
+      dispatch(
+        login({
+          isLogged: json.is_active,
+          fname: json.first_name,
+          lname: json.last_name,
+          email: json.email,
+          is_superuser: json.is_superuser,
+          image:"http://localhost:8000"+json.image
+
+        })
+      );
+      }
+        }
+        
+      
+    ;
+    if (!user.isLogged) {
+      getUser();
+    }
+    
+  }, [dispatch]);
+
+ 
   const [image, setImage] = useState(null);
-
-
   const handleImageChange = e => {
     const file = e.target.files[0];
     setImage(URL.createObjectURL(file));
@@ -40,8 +70,8 @@ const Profile = () => {
         </div>
         <div className="col-md-8">
           <div className="card-body">
-            <h5 className="card-title">Name: {user.fname} {user.lname}</h5>
-            <p className="card-text">Email: {user.email}</p>
+            <h5 className="card-title">Name: {user?user.fname:''} {user?user.lname:''}</h5>
+            <p className="card-text">Email: {user?user.email:''}</p>
           </div>
         </div>
       </div>

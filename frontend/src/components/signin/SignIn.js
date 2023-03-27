@@ -12,30 +12,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const user = useSelector((state) => state.user.value);
-  const dispatch = useDispatch();
 
-  const fetchUserData = async () => {
-    const data = await fetch("http://localhost:8000/api/user", {
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-    }).then(res => res.json())
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
-    const json = await data.json();
-    dispatch(
-      login({
-        isLogged: json.is_active,
-        fname: json.first_name,
-        lname: json.last_name,
-        email: json.email,
-        is_superuser:json.is_superuser,
-      })
-    );
-    return(
-      json.is_active
-    )
-  };
 
   const submit = async (e) => {
     e.preventDefault();
@@ -57,17 +34,16 @@ const SignIn = () => {
       setErrorMessage(data.detail)
     } else {
       setRedirect(true)
+      localStorage.setItem("user", JSON.stringify({ isLogged: true }))
     }
   };
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    if (!user.isLogged) {
-      fetchUserData();
-      
-    }
-  }, []);
 
   if (redirect) {
+    dispatch(login(
+      {isLogged:true}
+    ))
     return <Navigate to={"/home"} />;
   }
   return (

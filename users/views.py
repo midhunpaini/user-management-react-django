@@ -14,7 +14,6 @@ class RegisterView(APIView):
             return Response(serializer.data)
         else:
             errors = serializer.errors
-            print(errors)
             return Response(errors, status=400)
 
     

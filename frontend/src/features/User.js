@@ -5,9 +5,11 @@ const intialvalue = {isLogged:false, fname:"",lname:"",email:"",is_superuser:fal
 export const userSlice = createSlice({
     name:"user",
     initialState:{value:intialvalue},
+    isAuthenticated:false,
     reducers:{
         login: (state, action)=>{
             state.value = action.payload
+
         },
         logoutUser:(state)=>{
             state.value = intialvalue
